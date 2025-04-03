@@ -35,13 +35,13 @@ public class Routes
     private  EndpointGroup orderRoutes()
     {
         return () -> {
-            get("/all", orderController::getAll);
-            post("/", orderController::create);
-            get("/{id}", orderController::getById);
-            put("/{id}", orderController::update);
-            delete("/{id}", orderController::delete);
-            post("/populate", (ctx) -> orderController.populateDB(emf));
-            get("/search/{status}", orderController::searchByStatus);
+            get("/all", orderController::getAll, Roles.ADMIN);
+            post("/", orderController::create, Roles.ANYONE);
+            get("/{id}", orderController::getById, Roles.ANYONE);
+            put("/{id}", orderController::update, Roles.ANYONE);
+            delete("/{id}", orderController::delete, Roles.USER_WRITE);
+            post("/populate", (ctx) -> orderController.populateDB(emf), Roles.ADMIN);
+            get("/search/{status}", orderController::searchByStatus, Roles.USER_READ);
         };
     }
 
@@ -53,14 +53,14 @@ public class Routes
             post("/login", securityController::login, Roles.ANYONE);
             post("/register", securityController::register, Roles.ANYONE);
             get("/verify", securityController::verify , Roles.ANYONE);
-            get("/tokenlifespan", securityController::timeToLive , Roles.ANYONE);
+            get("/tokenlifespan", securityController::timeToLive , Roles.USER_READ);
         };
     }
 
     private  EndpointGroup protectedRoutes()
     {
         return () -> {
-            get("/user_demo",(ctx)->ctx.json(jsonMapper.createObjectNode().put("msg",  "Hello from USER Protected")), Roles.USER);
+            get("/user_demo",(ctx)->ctx.json(jsonMapper.createObjectNode().put("msg",  "Hello from USER Protected")), Roles.USER_READ);
             get("/admin_demo",(ctx)->ctx.json(jsonMapper.createObjectNode().put("msg",  "Hello from ADMIN Protected")), Roles.ADMIN);
         };
     }

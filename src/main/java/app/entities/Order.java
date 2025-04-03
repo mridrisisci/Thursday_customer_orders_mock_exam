@@ -4,6 +4,7 @@ import app.dto.OrderDTO;
 import app.enums.StatusType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,9 +26,11 @@ public class Order
 
     @Column(name = "order_date")
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("order_date")
     private LocalDate orderDate;
 
     @Column(name = "total_amount")
+    @JsonProperty("total_amount")
     private Integer totalAmount;
 
     @Enumerated(EnumType.STRING)
