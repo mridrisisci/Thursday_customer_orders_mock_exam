@@ -11,8 +11,12 @@ POST localhost:7070/api/orders
 Content-Type: "application/json"
 
 {
+    "id": 7,
     "name": "Deluxe order",
-    "status": "IN_PROGRESS"
+    "order_date": "2025-10-01",
+    "total_amount": 999,
+    "status": "IN_PROGRESS",
+    "customer_id": 2
 }
 
 ###
@@ -30,4 +34,4 @@ Content-Type: "application/json"
 DELETE localhost:7070/api/orders/7
 
 ###
-GET localhost:7070/api/hotel/1/rooms
+GET localhost:7070/api/orders/search/CANCELLED

@@ -3,6 +3,7 @@ package app.entities;
 import app.dto.OrderDTO;
 import app.enums.StatusType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class Order
     private String name;
 
     @Column(name = "order_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate orderDate;
 
     @Column(name = "total_amount")
@@ -37,6 +39,12 @@ public class Order
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    public Order(String name)
+    {
+        this.name = name;
+
+    }
+
     public Order(OrderDTO orderDTO)
     {
         this.id = orderDTO.getId();
@@ -45,5 +53,4 @@ public class Order
         this.totalAmount = orderDTO.getTotalAmount();
         this.status = orderDTO.getStatus();
     }
-
 }

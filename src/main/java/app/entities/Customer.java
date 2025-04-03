@@ -40,6 +40,11 @@ public class Customer
         this.orders = customerDTO.getOrders();
     }
 
+    public Customer(String name)
+    {
+        this.name = name;
+    }
+
     public void addOrder(Order order)
     {
         orders.add(order);

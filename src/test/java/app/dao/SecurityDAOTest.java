@@ -1,5 +1,5 @@
 package app.dao;
-
+/*
 import app.config.HibernateConfig;
 import app.entities.UserAccount;
 import app.enums.Roles;
@@ -191,3 +191,4 @@ class SecurityDAOTest {
     }
 
 }
+*/

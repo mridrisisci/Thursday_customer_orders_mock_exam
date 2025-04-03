@@ -2,6 +2,11 @@ package app.controllers;
 
 import app.config.ApplicationConfig;
 import app.config.HibernateConfig;
+import app.dto.CustomerDTO;
+import app.dto.OrderDTO;
+import app.entities.Customer;
+import app.entities.Order;
+import app.enums.StatusType;
 import app.routes.Routes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +20,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -25,7 +32,8 @@ class OrderResourceTest
 
     private static final EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryForTest();
     final ObjectMapper objectMapper = new ObjectMapper();
-    Hotel t1, t2;
+    Customer c1, c2;
+    Order o1, o2, o3;
     final Logger logger = LoggerFactory.getLogger(OrderResourceTest.class.getName());
 
 
@@ -52,14 +60,21 @@ class OrderResourceTest
         try (EntityManager em = emf.createEntityManager())
         {
             //TestEntity[] entities = EntityPopulator.populate(genericDAO);
-            t1 = new Hotel("TestEntityA");
-            t2 = new Hotel("TestEntityB");
+            c1 = new Customer("TestEntityA");
+            c2 = new Customer("TestEntityB");
+            o1 = new Order("Test Order A");
+            o2 = new Order("Test Order B");
+            o3 = new Order("Test Order C");
             em.getTransaction().begin();
-            em.createQuery("DELETE FROM Room ").executeUpdate();
-            em.createQuery("DELETE FROM Hotel ").executeUpdate();
+            em.createQuery("DELETE FROM Customer ").executeUpdate();
+            em.createQuery("DELETE FROM Order ").executeUpdate();
 
-            em.persist(t1);
-            em.persist(t2);
+            em.persist(c1);
+            em.persist(c2);
+
+            em.persist(o1);
+            em.persist(o2);
+            em.persist(o3);
             em.getTransaction().commit();
         }
         catch (Exception e)
@@ -71,37 +86,37 @@ class OrderResourceTest
     @Test
     void getAll()
     {
-        given().when().get("/hotel").then().statusCode(200).body("size()", equalTo(2));
+        given().when().get("/orders/all").then().statusCode(200).body("size()", equalTo(3));
     }
 
     @Test
     void getById()
     {
-        given().when().get("/hotel/" + t2.getId()).then().statusCode(200).body("id", equalTo(t2.getId().intValue()));
+        given().when().get("/orders/" + c2.getId()).then().statusCode(200).body("id", equalTo(c2.getId().intValue()));
     }
 
     @Test
     void create()
     {
-        Hotel entity = new Hotel("Thor Partner Hotel", "Carl Gustavs Gade 1");
-        Room room = new Room("201");
-        entity.addRoom(room);
         try
         {
-            String json = objectMapper.writeValueAsString(new HotelDTO(entity));
+            String json = objectMapper.createObjectNode()
+                .put("name: ", "test order 1")
+                .put("order date:", LocalDate.now().toString())
+                .put("total amount:", 100)
+                .put("status:", StatusType.PENDING.toString())
+                .toString();
             given().when()
                     .contentType("application/json")
                     .accept("application/json")
                     .body(json)
-                    .post("/hotel")
+                    .post("/orders")
                     .then()
-                    .statusCode(200)
-                    .body("name", equalTo(entity.getName()))
-                    .body("address", equalTo(entity.getAddress()));
-                    //.body("rooms.size()", equalTo(1));
-        } catch (JsonProcessingException e)
+                    .statusCode(201)
+                    .body("name", equalTo("test order 1"));
+        } catch (Exception e)
         {
-            logger.error("Error creating hotel", e);
+            logger.error("Error creating order", e);
 
             fail();
         }
@@ -110,15 +125,15 @@ class OrderResourceTest
     @Test
     void update()
     {
-        Hotel entity = new Hotel("New entity2");
+        Customer entity = new Customer("New entity2");
         try
         {
-            String json = objectMapper.writeValueAsString(new HotelDTO(entity));
+            String json = objectMapper.writeValueAsString(new CustomerDTO(entity));
             given().when()
                     .contentType("application/json")
                     .accept("application/json")
                     .body(json)
-                    .put("/hotel/" + t1.getId()) // double check id
+                    .put("/orders/" + c1.getId()) // double check id
                     .then()
                     .statusCode(200)
                     .body("name", equalTo("New entity2"));
@@ -133,7 +148,7 @@ class OrderResourceTest
     void delete()
     {
         given().when()
-                .delete("/hotel/" + t1.getId())
+                .delete("/orders/" + c1.getId())
                 .then()
                 .statusCode(204);
     }

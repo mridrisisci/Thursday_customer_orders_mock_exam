@@ -7,6 +7,8 @@ import app.dto.OrderDTO;
 import app.entities.Customer;
 import app.entities.Order;
 import app.utils.Populator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import jakarta.persistence.EntityManager;
@@ -15,12 +17,15 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class OrderController implements IController
 {
     private final CrudDAO dao;
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
-
 
     public OrderController(EntityManagerFactory emf)
     {
@@ -44,6 +49,28 @@ public class OrderController implements IController
         {
             logger.error("Error populating database: " + e.getMessage());
         }
+
+    }
+
+    public void searchByStatus(Context ctx)
+    {
+        List<Order> filteredOrders = new ArrayList<>();
+        List<Order> orders;
+        try
+        {
+            String param = ctx.pathParam("status");
+            orders = dao.getAll(Order.class);
+            filteredOrders = orders.stream()
+                .filter(order -> order.getStatus().equals(param))
+                .collect(Collectors.toList());
+        }
+        catch (Exception ex)
+        {
+            logger.error("Error getting orders by status", ex);
+            ErrorMessage error = new ErrorMessage("Error getting orders by status");
+            ctx.status(404).json(error);
+        }
+        ctx.status(200).json(filteredOrders);
 
     }
 
@@ -108,6 +135,7 @@ public class OrderController implements IController
 
     public void update(Context ctx)
     {
+
         try
         {
             //int id = Integer.parseInt(ctx.pathParam("id"));
@@ -131,7 +159,7 @@ public class OrderController implements IController
         catch (Exception ex)
         {
             logger.error("Error updating entity", ex);
-            ErrorMessage error = new ErrorMessage("Error updating entity. " + ex.getMessage());
+            ErrorMessage error = new ErrorMessage("Error updating entity");
             ctx.status(400).json(error);
         }
     }

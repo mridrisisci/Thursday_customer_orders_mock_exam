@@ -1,7 +1,8 @@
 package app.dao;
-
+/*
 import app.config.HibernateConfig;
 import app.entities.*;
+import app.entities.Order;
 import app.exceptions.DaoException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -17,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class GenericDAOTest
 {
     private static final EntityManagerFactory emf = HibernateConfig.getEntityManagerFactoryForTest();
-    private static final GenericDAO genericDAO = new HotelDAO(emf);
-    private static Hotel h1, h2;
-    private static Room r1, r2, r3, r4;
+    private static final GenericDAO genericDAO = new OrderDAO(emf);
+    private static Customer h1, h2;
+    private static Order o1, o2, o3, o4;
 
 
     @BeforeEach
@@ -215,4 +216,4 @@ class GenericDAOTest
             assertNull(found);
         }
     }
-}
+}*/

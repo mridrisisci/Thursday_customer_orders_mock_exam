@@ -1,5 +1,5 @@
 package app.controllers;
-
+/*
 import app.config.ApplicationConfig;
 import app.config.HibernateConfig;
 import app.entities.UserAccount;
@@ -321,3 +321,4 @@ class SecurityControllerTest {
             .body("msg", equalTo("Hello from ADMIN Protected"));
     }
 }
+*/

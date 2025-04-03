@@ -41,6 +41,7 @@ public class Routes
             put("/{id}", orderController::update);
             delete("/{id}", orderController::delete);
             post("/populate", (ctx) -> orderController.populateDB(emf));
+            get("/search/{status}", orderController::searchByStatus);
         };
     }
 
