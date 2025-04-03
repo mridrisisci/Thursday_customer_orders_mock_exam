@@ -1,0 +1,33 @@
+POST localhost:7070/api/orders/populate
+
+###
+GET localhost:7070/api/orders/all
+
+###
+GET localhost:7070/api/orders/3
+
+###
+POST localhost:7070/api/orders
+Content-Type: "application/json"
+
+{
+    "name": "Deluxe order",
+    "status": "IN_PROGRESS"
+}
+
+###
+PUT localhost:7070/api/orders/1
+Content-Type: "application/json"
+
+{
+    "name": "PRESIDENTIAL ORDER",
+    "order_date": 2023-10-01,
+    "total_amount": 1000,
+    "status": "COMPLETED"
+}
+
+###
+DELETE localhost:7070/api/orders/7
+
+###
+GET localhost:7070/api/hotel/1/rooms
