@@ -39,8 +39,8 @@ public class Routes
             post("/", orderController::create, Roles.ANYONE);
             get("/{id}", orderController::getById, Roles.ANYONE);
             put("/{id}", orderController::update, Roles.ANYONE);
-            delete("/{id}", orderController::delete, Roles.USER_WRITE);
-            post("/populate", (ctx) -> orderController.populateDB(emf), Roles.ADMIN);
+            delete("/{id}", orderController::delete, Roles.USER_WRITE, Roles.ADMIN);
+            post("/populate", (ctx) -> orderController.populateDB(emf), Roles.ADMIN, Roles.USER_WRITE);
             get("/search/{status}", orderController::searchByStatus, Roles.USER_READ);
         };
     }

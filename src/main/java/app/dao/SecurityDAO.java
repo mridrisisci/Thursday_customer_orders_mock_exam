@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManagerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SecurityDAO extends GenericDAO implements ISecurityDAO
@@ -42,7 +43,7 @@ public class SecurityDAO extends GenericDAO implements ISecurityDAO
     public UserAccount createUser(String username, String password)
     {
         UserAccount userAccount = new UserAccount(username, password);
-        userAccount.addRole(Roles.USER);
+        userAccount.addRole(Roles.USER_READ);
         try
         {
             userAccount = super.create(userAccount);
@@ -91,4 +92,6 @@ public class SecurityDAO extends GenericDAO implements ISecurityDAO
             throw new DaoException("Error removing role from user", e);
         }
     }
+
+
 }
