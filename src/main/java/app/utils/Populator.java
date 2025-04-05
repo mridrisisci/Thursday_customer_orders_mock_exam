@@ -119,9 +119,6 @@ public class Populator
 
 
         }
-
-
-
     }
 
     public void resetAndPersistEntities(EntityManager em)

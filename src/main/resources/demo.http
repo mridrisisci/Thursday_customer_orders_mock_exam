@@ -35,3 +35,6 @@ DELETE localhost:7070/api/orders/7
 
 ###
 GET localhost:7070/api/orders/search/CANCELLED
+
+###
+GET localhost:7070/api/packing/

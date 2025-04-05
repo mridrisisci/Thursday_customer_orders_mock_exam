@@ -2,6 +2,8 @@ package app.routes;
 
 import app.config.HibernateConfig;
 import app.controllers.OrderController;
+import app.controllers.PackingListController;
+import app.utils.DataAPIReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import app.controllers.SecurityController;
 import app.enums.Roles;
@@ -16,6 +18,8 @@ public class Routes
     private final SecurityController securityController;
     private final ObjectMapper jsonMapper = new ObjectMapper();
     private final EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
+    private final DataAPIReader dataAPIReader = new DataAPIReader();
+    private final PackingListController packingListController = new PackingListController(dataAPIReader, emf);
 
     public Routes(OrderController orderController, SecurityController securityController)
     {
@@ -29,6 +33,13 @@ public class Routes
             path("orders", orderRoutes());
             path("auth", authRoutes());
             path("protected", protectedRoutes());
+            path("packing", packingRoutes());
+        };
+    }
+    private EndpointGroup packingRoutes()
+    {
+        return () -> {
+            get("/", packingListController::getPackingList);
         };
     }
 
